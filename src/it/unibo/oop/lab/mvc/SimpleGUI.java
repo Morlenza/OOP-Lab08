@@ -1,9 +1,19 @@
 package it.unibo.oop.lab.mvc;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.OutputStream;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import it.unibo.oop.lab.mvcio2.SimpleGUIWithFileChooser;
 
 /**
  * A very simple program using a graphical interface.
@@ -16,7 +26,7 @@ public final class SimpleGUI {
     /*
      * Once the Controller is done, implement this class in such a way that:
      * 
-     * 1) I has a main method that starts the graphical application
+     * 1) It has a main method that starts the graphical application
      * 
      * 2) In its constructor, sets up the whole view
      * 
@@ -38,7 +48,40 @@ public final class SimpleGUI {
      * builds a new {@link SimpleGUI}.
      */
     public SimpleGUI() {
+        //Main panel
+        final JPanel mainPanel = new JPanel(new BorderLayout());
+        final JTextField textField = new JTextField();
+        final JTextArea textArea = new JTextArea();
+        textArea.setEditable(false);
+        final JPanel lowPanel = new JPanel(new BorderLayout());
+        final JButton print = new JButton("Print");
+        final JButton history = new JButton("Show History");
+        //add stuff to Main panel
+        mainPanel.add(textField, BorderLayout.NORTH);
+        mainPanel.add(textArea, BorderLayout.CENTER);
+        lowPanel.add(print, BorderLayout.WEST);
+        lowPanel.add(history, BorderLayout.EAST);
+        mainPanel.add(lowPanel, BorderLayout.SOUTH);
+        final Controller ctrl = new ControllerImpl();
+        //Handlers
+        print.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                ctrl.setNextString(textField.getText());
+                ctrl.printCurrentString();
+            }
+        });
+        history.addActionListener(new ActionListener() {
+            public void actionPerformed(final ActionEvent e) {
+                for (final String string : ctrl.getHistory()) {
+                    textArea.append(string + "\n");
+                }
+            }
+        });
+        frame.getContentPane().add(mainPanel);
+    }
 
+    public void display() {
         /*
          * Make the frame half the resolution of the screen. This very method is
          * enough for a single screen setup. In case of multiple monitors, the
@@ -59,7 +102,13 @@ public final class SimpleGUI {
          * flag makes the OS window manager take care of the default positioning
          * on screen. Results may vary, but it is generally the best choice.
          */
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+        }
+
+    public static void main(final String[] args) {
+        new SimpleGUI().display();;
     }
 
 }
