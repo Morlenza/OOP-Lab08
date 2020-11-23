@@ -1,5 +1,13 @@
 package it.unibo.oop.lab.mvcio;
 
+import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import it.unibo.oop.lab.iogui.BadIOGUI;
+
 /**
  * 
  */
@@ -27,5 +35,53 @@ public class Controller {
      * System.getProperty("file.separator"). The combined use of those methods leads
      * to a software that runs correctly on every platform.
      */
+
+     private File file;
+     private static final String PATH = System.getProperty("user.home")
+             + System.getProperty("file.separator")
+             + "output.txt";
+
+     public Controller() {
+         this.file = new File(PATH);
+     }
+     /**
+      * 
+      * @return the file
+      */
+    public final File getFile() {
+        return file;
+    }
+    /**
+     * 
+     * 
+     * @param file
+     *           set file to current
+     */
+    public final void setFile(final File file) {
+        this.file = file;
+    }
+    /**
+     * 
+     * @param file
+     * @return the String of the path
+     */
+    public final String getPath(final File file) {
+        return file.getPath();
+    }
+    /**
+     * 
+     * @param text you want to write in file
+     * @throws IOException
+     */
+    public final void writeToFile(final String text) throws IOException {
+        try (
+              DataOutputStream f = new DataOutputStream(
+                new BufferedOutputStream(
+                  new FileOutputStream(file)));
+        ) {
+            f.writeUTF(text);
+        }
+    }
+
 
 }
