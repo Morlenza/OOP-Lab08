@@ -48,7 +48,7 @@ public class Controller {
       * 
       * @return the file
       */
-    public final File getFile() {
+    public final File getCurrentFile() {
         return file;
     }
     /**
